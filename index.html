@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Whistle Podu Arya! 🦁 Happy Birthday</title>
+  
+  <!-- Canvas Confetti for Celebration effect -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif, -apple-system;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1c2331, #0b0f19);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 25px 15px;
+    }
+
+    /* Top Banner / Stadium Header */
+    .header-box {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #fdb913; /* CSK Gold Yellow */
+      color: #002366;      /* CSK Blue */
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      box-shadow: 0 0 15px rgba(253, 185, 19, 0.4);
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #ffea00, #fdb913, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+    }
+
+    .subtext {
+      color: #90a4ae;
+      font-size: 1rem;
+      margin-top: 6px;
+    }
+
+    /* Scoreboard Card */
+    .scoreboard {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(253, 185, 19, 0.3);
+      border-radius: 16px;
+      padding: 15px 25px;
+      margin-bottom: 30px;
+      display: flex;
+      gap: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fdb913;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: #b0bec5;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Videos Grid */
+    .video-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 25px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    @media (min-width: 768px) {
+      .video-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .player-card {
+      background: #111827;
+      border: 2px solid #243048;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+
+    .player-card:hover {
+      transform: translateY(-5px);
+      border-color: #fdb913;
+      box-shadow: 0 10px 30px rgba(253, 185, 19, 0.25);
+    }
+
+    .card-header {
+      padding: 15px;
+      background: #192338;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #243048;
+    }
+
+    .player-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tag {
+      background: #fdb913;
+      color: #0b0f19;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    /* Video Player Wrapper */
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 130%; /* Reel / Shorts portrait aspect ratio */
+      background: #000;
+      cursor: pointer;
+    }
+
+    .video-wrapper video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Tap to play overlay */
+    .play-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+    }
+
+    .play-icon {
+      width: 60px;
+      height: 60px;
+      background: #fdb913;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      box-shadow: 0 0 20px rgba(253, 185, 19, 0.6);
+    }
+
+    .play-icon svg {
+      fill: #000;
+      width: 28px;
+      height: 28px;
+      margin-left: 4px;
+    }
+
+    .play-text {
+      color: #fff;
+      font-weight: bold;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    .card-footer {
+      padding: 12px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #78909c;
+      background: #111827;
+    }
+
+    /* Birthday Wish Footer */
+    .wish-box {
+      margin-top: 35px;
+      max-width: 600px;
+      text-align: center;
+      padding: 20px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(253,185,19,0.1), rgba(0,35,102,0.2));
+      border: 1px dashed #fdb913;
+    }
+
+    .wish-box p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #eceff1;
+    }
+
+    
+  </style>
+</head>
+<body>
+
+  <!-- CSK Themed Header -->
+  <div class="header-box">
+    <div class="badge"> A very special day💛</div>
+    <h1>Happy Birthday Arya! 🎂</h1>
+    <p class="subtext">Special wishes straight from the pavilion!</p>
+  </div>
+
+  <!-- Cricket Match Scoreboard Details -->
+  <div class="scoreboard">
+    <div class="stat-item">
+      <div class="stat-value">26</div>
+      <div class="stat-label">ARRYAAS DAY!!💮🎂</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">#7</div>
+      <div class="stat-label">BIRTHDAY WISH FROM CAPTAIN COOL🥶❤️</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">#4</div>
+      <div class="stat-label">BIRTHDAY WISH FROM ABHISHEK SHARMA👀❤️</div>
+    </div>
+  </div>
+
+  <!-- Video Columns -->
+  <div class="video-grid">
+    
+    <!-- 1. MS DHONI COLUMN -->
+    <div class="player-card">
+      <div class="card-header">
+        <div class="player-title">
+          <span>🦁</span> MS Dhoni
+        </div>
+        <span class="tag">THALA</span>
+      </div>
+
+      <div class="video-wrapper" onclick="togglePlay('dhoniVideo', 'dhoniOverlay')">
+        <!-- 
+          Apne video file ka naam yahan likhein (e.g., dhoni.mp4)
+          playsinline aur loop added hai taaki repeat par chale
+        -->
+        <video id="dhoniVideo" loop playsinline>
+          <source src="ms dhoni.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+
+        <div class="play-overlay" id="dhoniOverlay">
+          <div class="play-icon">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <span class="play-text">TAP TO WATCH DHONI WISH</span>
+        </div>
+      </div>
+
+      <div class="card-footer">
+       HAVE  A  GREAT  DAYYY  KUUHHUUUUU  !!!🧿❤️
+      </div>
+    </div>
+
+    <!-- 2. ABHISHEK SHARMA COLUMN -->
+    <div class="player-card">
+      <div class="card-header">
+        <div class="player-title">
+          <span>⚡</span> Abhishek Sharma
+        </div>
+        <span class="tag">POWER HITTER</span>
+      </div>
+
+      <div class="video-wrapper" onclick="togglePlay('abhishekVideo', 'abhishekOverlay')">
+        <!-- 
+          Apne video file ka naam yahan likhein (e.g., abhishek.mp4)
+        -->
+        <video id="abhishekVideo" controls playsinline>
+          <source src="abhishek.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+
+        <div class="play-overlay" id="abhishekOverlay">
+          <div class="play-icon">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <span class="play-text">TAP TO WATCH ABHISHEK WISH</span>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        HAPPPYYYY  BIRTHDAAYYY  ARRRYAAA !!! ❤️🎂
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Personal Message Card -->
+  
+
+  <script>
+    // Video play/pause logic with overlay toggle
+    function togglePlay(videoId, overlayId) {
+      const video = document.getElementById(videoId);
+      const overlay = document.getElementById(overlayId);
+
+      if (video.paused) {
+        video.play();
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+        
+        // Tap karne par cracker/confetti effect fire hoga
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.7 }
+        });
+      } else {
+        video.pause();
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'auto';
+      }
+    }
+
+    // Page khulte hi celebration blast
+    window.onload = () => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    };
+
+  </script>
+
+
+</body>
+</html>
